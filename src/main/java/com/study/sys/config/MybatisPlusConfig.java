@@ -28,12 +28,6 @@ public class MybatisPlusConfig {
 
     @Bean("sqlSessionFactory")
     public MybatisSqlSessionFactoryBean mybatisSqlSessionFactoryBean() throws Exception {
-//        Map map = new HashMap();
-//        map.put("driverClassName", "com.mysql.cj.jdbc.Driver");
-//        map.put("url", "jdbc:mysql://cdb-obab2ln3.gz.tencentcdb.com:10005/newOA?useUnicode=true&useSSL=false&characterEncoding=utf8&severTimezone=Asia/Shanghai");
-//        map.put("username", "root");
-//        map.put("password", "xy123456");
-//        dataSource = DruidDataSourceFactory.createDataSource(map);
         ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
         Resource[] mapperLocations = resolver.getResources("classpath:mybatis/*.xml");
         MybatisSqlSessionFactoryBean mybatisSqlSessionFactoryBean = new MybatisSqlSessionFactoryBean();
