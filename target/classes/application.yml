@@ -1,0 +1,20 @@
+server:
+  port: 8082
+
+
+spring:
+  datasource:
+    url: jdbc:mysql://cdb-obab2ln3.gz.tencentcdb.com:10005/newOA?useUnicode=true&useSSL=false&characterEncoding=utf8&severTimezone=Asia/Shanghai
+    #url: jdbc:mysql://127.0.0.1:3306/newoa?useUnicode=true&useSSL=false&characterEncoding=utf8&severTimezone=Asia/Shanghai
+    username: root
+    password: xy123456
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+logging:
+  config: classpath:logback-spring.xml
+
+#mybatis:
+#  mapper-locations: classpath:mybatis/*.xml
+
+upload-file-path: D:/webapps/file
+

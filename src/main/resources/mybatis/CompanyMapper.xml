@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.study.sys.mapper.CompanyMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.study.sys.entity.Company">
+        <id column="id" property="id" />
+        <result column="company_num" property="companyNum" />
+        <result column="company_name" property="companyName" />
+        <result column="parent_id" property="parentId" />
+        <result column="legal_representative" property="legalRepresentative" />
+        <result column="registered_capital" property="registeredCapital" />
+        <result column="address" property="address" />
+        <result column="website_address" property="websiteAddress" />
+        <result column="company_logo" property="companyLogo" />
+        <result column="company_phone" property="companyPhone" />
+        <result column="company_buss_range" property="companyBussRange" />
+        <result column="company_card" property="companyCard" />
+        <result column="status" property="status" />
+        <result column="remark" property="remark" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="latitude" property="latitude" />
+        <result column="longitude" property="longitude" />
+        <result column="com_type" property="comType" />
+        <result column="email" property="email" />
+        <result column="manage_status" property="manageStatus" />
+        <result column="commercial_registration_number" property="commercialRegistrationNumber" />
+        <result column="unified_social_credit_code" property="unifiedSocialCreditCode" />
+        <result column="organizing_institution_bar_code" property="organizingInstitutionBarCode" />
+        <result column="establish_date" property="establishDate" />
+        <result column="industry" property="industry" />
+        <result column="taxpayer_qualification" property="taxpayerQualification" />
+        <result column="contributed_capital" property="contributedCapital" />
+        <result column="staff_size" property="staffSize" />
+        <result column="insured_number" property="insuredNumber" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, company_num, company_name, parent_id, legal_representative, registered_capital, address, website_address, company_logo, company_phone, company_buss_range, company_card, status, remark, create_time, update_time, latitude, longitude, com_type, email, manage_status, commercial_registration_number, unified_social_credit_code, organizing_institution_bar_code, establish_date, industry, taxpayer_qualification, contributed_capital, staff_size, insured_number
+    </sql>
+
+</mapper>

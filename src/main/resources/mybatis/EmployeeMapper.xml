@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.study.sys.mapper.EmployeeMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.study.sys.entity.Employee">
+        <id column="id" property="id" />
+        <result column="employee_num" property="employeeNum" />
+        <result column="employee_name" property="employeeName" />
+        <result column="credentials_stype" property="credentialsStype" />
+        <result column="card_id" property="cardId" />
+        <result column="gender" property="gender" />
+        <result column="birth_day" property="birthDay" />
+        <result column="nationality_type" property="nationalityType" />
+        <result column="nation_type" property="nationType" />
+        <result column="marital_status" property="maritalStatus" />
+        <result column="native_place" property="nativePlace" />
+        <result column="birth_place" property="birthPlace" />
+        <result column="political_status" property="politicalStatus" />
+        <result column="admission_day" property="admissionDay" />
+        <result column="join_work_day" property="joinWorkDay" />
+        <result column="highest_education" property="highestEducation" />
+        <result column="highest_degree" property="highestDegree" />
+        <result column="health" property="health" />
+        <result column="technical_position" property="technicalPosition" />
+        <result column="qualification" property="qualification" />
+        <result column="into_sys_time" property="intoSysTime" />
+        <result column="employee_status" property="employeeStatus" />
+        <result column="into_company_time" property="intoCompanyTime" />
+        <result column="source_entry" property="sourceEntry" />
+        <result column="account_type" property="accountType" />
+        <result column="registered_residence" property="registeredResidence" />
+        <result column="current_residence" property="currentResidence" />
+        <result column="email" property="email" />
+        <result column="phone" property="phone" />
+        <result column="tel" property="tel" />
+        <result column="contact_relationship_name" property="contactRelationshipName" />
+        <result column="contact_relationship" property="contactRelationship" />
+        <result column="contact_relationship_phone" property="contactRelationshipPhone" />
+        <result column="account" property="account" />
+        <result column="pass_word" property="passWord" />
+        <result column="jianpin" property="jianpin" />
+        <result column="zhuanchang" property="zhuanchang" />
+        <result column="opening_bank" property="openingBank" />
+        <result column="bank_account" property="bankAccount" />
+        <result column="type" property="type" />
+        <result column="opening_bank_adress" property="openingBankAdress" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="archives_residence" property="archivesResidence" />
+        <result column="annual_assessment_results" property="annualAssessmentResults" />
+        <result column="entry" property="entry" />
+        <result column="employee_state" property="employeeState" />
+        <result column="avatar" property="avatar" />
+        <result column="probationary_eriod" property="probationaryEriod" />
+        <result column="cadre" property="cadre" />
+        <result column="registration_id" property="registrationId" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, employee_num, employee_name, credentials_stype, card_id, gender, birth_day, nationality_type, nation_type, marital_status, native_place, birth_place, political_status, admission_day, join_work_day, highest_education, highest_degree, health, technical_position, qualification, into_sys_time, employee_status, into_company_time, source_entry, account_type, registered_residence, current_residence, email, phone, tel, contact_relationship_name, contact_relationship, contact_relationship_phone, account, pass_word, jianpin, zhuanchang, opening_bank, bank_account, type, opening_bank_adress, create_time, update_time, archives_residence, annual_assessment_results, entry, employee_state, avatar, probationary_eriod, cadre, registration_id
+    </sql>
+
+</mapper>
