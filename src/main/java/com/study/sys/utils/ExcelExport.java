@@ -12,13 +12,14 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
-import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author wxl
@@ -26,6 +27,10 @@ import java.util.List;
  */
 @Slf4j
 public class ExcelExport {
+
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+
+    private DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
 
     /**
      * 普通Excel导出
@@ -35,6 +40,7 @@ public class ExcelExport {
      */
     public void commonExcelExport(String sheetName, String[] headers, List<List<String>> dataList, HttpServletResponse response) throws IllegalAccessException, InstantiationException, IOException {
         try {
+            Assert.notNull(sheetName, "sheetName不能为空");
             Assert.notEmpty(headers, "headerList不能为空");
             Assert.notEmpty(dataList, "dataList不能为空");
             XSSFWorkbook wb = new XSSFWorkbook();
@@ -69,55 +75,81 @@ public class ExcelExport {
      * 本方法将读取数据库中对应表的字段注释信息作为表头
      * @param sheetName xls表名
      * @param tableName 数据库表名
-     * @param tableName 需要忽略的字段
+     * @param tableName 需要忽略的字段，以","分隔，例："0,3,4"
      * @param dataList 数据
+     * @param map 需要处理的枚举，key为枚举，value为信息，例：现在有枚举：YES("yes","正确");则map.put("YES","正确")
+     * @param response
      */
-    public <T> void entityExcelExport(String sheetName, String tableName, String ignoreNums, List<T> dataList, HttpServletResponse response) throws IllegalAccessException, InstantiationException, IOException, SQLException, ClassNotFoundException {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-        List<Object> entityFieldsList = new ArrayList<>();
-        List<Object> entityCommentList = new ArrayList<>();
-        EntityFieldsAndCommentExportUtil.get(entityFieldsList, entityCommentList, tableName);
-        XSSFWorkbook wb = new XSSFWorkbook();
-        XSSFSheet sheet = wb.createSheet(sheetName);
-        XSSFRow row = sheet.createRow((short) 0);
-        for (int i = 0; i < entityCommentList.size(); i++) {
-            row.createCell(i).setCellValue(entityCommentList.get(i).toString());
-        }
-        for (int i = 0; i < dataList.size(); i++){
-            XSSFRow newRow = sheet.createRow((short) i + 1);
-            Class<T> clazz = (Class<T>) dataList.get(i).getClass();
-            T entity = clazz.newInstance();
-            Field[] fields = clazz.getDeclaredFields();
-            int m = 0;
-            for (int j = 0; j < dataList.size(); j++){
-                m = j;
-                fields[j].setAccessible(true);
-                if(!"serialVersionUID".equals(fields[j].get(entity))) {
-                    String value = "";
-                    if (fields[j].get(entity) != null) {
-                        if (isDate(fields[j])) {
-                            value = dateFormat.format(fields[j].get(entity));
-                        } else {
-                            value = fields[j].get(entity).toString();
-                        }
-                    }
-                    newRow.createCell(j).setCellValue(value);
+    public <T> void entityExcelExport(String sheetName, String tableName, String ignoreNums, List<T> dataList,
+                                      Map<String,String> map, HttpServletResponse response) {
+        try {
+            Assert.notNull(sheetName,"sheetName不能为空");
+            Assert.notNull(tableName,"tableName不能为空");
+            Assert.notNull(ignoreNums,"ignoreNums不能为空");
+            Assert.notEmpty(dataList,"dataList不能为空");
+            ignoreNums = ignoreNums + ",";
+            List<Object> entityFieldsList = new ArrayList<>();
+            List<Object> entityCommentList = new ArrayList<>();
+            EntityFieldsAndCommentExportUtil.get(entityFieldsList, entityCommentList, tableName);
+            XSSFWorkbook wb = new XSSFWorkbook();
+            XSSFSheet sheet = wb.createSheet(sheetName);
+            XSSFRow row = sheet.createRow((short) 0);
+            Integer n = 0;
+            for (int i = 0; i < entityCommentList.size(); i++) {
+                if (!ignoreNums.contains(i + ",")) {
+                    row.createCell(n).setCellValue(entityCommentList.get(i).toString());
+                    n++;
                 }
             }
+            for (int i = 0; i < dataList.size(); i++) {
+                n = 0;
+                Integer m = 0;
+                XSSFRow newRow = sheet.createRow((short) i + 1);
+                Class<T> clazz = (Class<T>) dataList.get(i).getClass();
+                T entity = dataList.get(i);
+                Field[] fields = clazz.getDeclaredFields();
+                for (int j = 0; j < fields.length; j++) {
+                    fields[j].setAccessible(true);
+                    if (!"serialVersionUID".equals(fields[j].getName())) {
+                        if (!ignoreNums.contains(m + ",")) {
+                            String value = "";
+                            if (fields[j].get(entity) != null) {
+                                value = formattingValue(fields[j], entity, value, map);
+                            }
+                            newRow.createCell(n).setCellValue(value);
+                            n++;
+                        }
+                        m++;
+                    }
+                }
+            }
+            setResponse(sheetName, response);
+            OutputStream outputStream = new BufferedOutputStream(response.getOutputStream());
+            try {
+                wb.write(outputStream);
+                outputStream.flush();
+            } finally {
+                outputStream.close();
+            }
+        } catch (Exception e) {
+            log.error("实体类excel导出失败，失败原因：{}", e);
+            throw new RuntimeException("实体类excel导出失败");
         }
-        setResponse(sheetName, response);
-        OutputStream outputStream = new BufferedOutputStream(response.getOutputStream());
-        wb.write(outputStream);
-        outputStream.flush();
-        outputStream.close();
     }
 
-    public Boolean isDate(Field field){
-        Boolean flag = false;
-        if(field.getType() == LocalDateTime.class || field.getType() == LocalDate.class || field.getType() == Date.class){
-            flag = true;
+    private  <T> String formattingValue(Field field, T entity, String value, Map<String,String> map) throws IllegalAccessException {
+        if(field.getType() == LocalDateTime.class){
+            value = dateTimeFormatter.format((LocalDateTime)field.get(entity));
+        }else if (field.getType() == LocalDate.class){
+            value = dateTimeFormatter.format((LocalDate)field.get(entity));
+        }else if (field.getType() == Date.class){
+            value = dateFormat.format((Date)field.get(entity));
+        }else if (field.getType().isEnum()){
+            value = map.get(field.get(entity).toString());
+        } else {
+            value = field.get(entity).toString();
         }
-        return flag;
+        return value;
     }
 
     /**
