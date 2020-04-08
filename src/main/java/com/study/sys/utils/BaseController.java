@@ -41,8 +41,7 @@ public class BaseController <T, M extends IService> extends BaseControllerOperat
         RestResult<T> result = RestResult.success();
         try {
             UpdateWrapper<T> wrapper = new UpdateWrapper<>();
-            wrapper.eq("name","id");
-            this.getEntityService().update(entity, wrapper);
+            this.getEntityService().updateById(entity);
             result.setData(entity);
         } catch (Exception e) {
             log.error("修改整表信息失败，失败原因：{}",e);
