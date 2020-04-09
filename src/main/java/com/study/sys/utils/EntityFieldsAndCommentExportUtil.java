@@ -15,7 +15,7 @@ import java.util.List;
 @Slf4j
 public class EntityFieldsAndCommentExportUtil {
     public static void get(List<Object> entityFieldsList, List<Object> entityCommentList, String tableName) throws SQLException, ClassNotFoundException {
-        Connection connect = new DatabaseConnectUtil().getConnection();
+        Connection connect = DatabaseConnectUtil.getConnection();
         try {
             Statement stmt = (Statement) connect.createStatement();
             ResultSet rs = stmt.executeQuery("show full columns from " + tableName);
