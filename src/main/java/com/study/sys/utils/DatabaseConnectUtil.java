@@ -55,15 +55,6 @@ public class DatabaseConnectUtil {
         DatabaseConnectUtil.driver = driver;
     }
 
-
-//    private String url = "jdbc:mysql://10.35.11.146:3309/oa_zs_56?useUnicode=true&useSSL=false&characterEncoding=utf8&severTimezone=Asia/Shanghai";
-//
-//    private String username = "root";
-//
-//    private String password = "123456";
-//
-//    private String driver = "com.mysql.jdbc.Driver";
-
     public static Connection getConnection() throws ClassNotFoundException, SQLException {
         Class.forName(driver);
         Connection connection = (Connection) DriverManager.getConnection(url, username, password);

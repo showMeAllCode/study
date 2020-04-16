@@ -1,6 +1,8 @@
 package com.study.sys.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import java.time.LocalDateTime;
 import java.io.Serializable;
 import io.swagger.annotations.ApiModel;
@@ -15,7 +17,7 @@ import lombok.experimental.Accessors;
  * </p>
  *
  * @author wxl
- * @since 2020-03-30
+ * @since 2020-04-10
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -26,8 +28,12 @@ public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @ApiModelProperty(value = "主键Id")
+    @ApiModelProperty(value = "主键")
+    @TableId(value = "id", type = IdType.AUTO)
     private Long id;
+
+    @ApiModelProperty(value = "用户编码")
+    private String userNum;
 
     @ApiModelProperty(value = "用户名")
     private String userName;

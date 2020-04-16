@@ -1,7 +1,7 @@
 package com.study.sys.service;
 
 import com.study.sys.entity.User;
-import com.baomidou.mybatisplus.extension.service.IService;
+import com.study.sys.utils.BaseService;
 
 /**
  * <p>
@@ -9,8 +9,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * </p>
  *
  * @author wxl
- * @since 2020-03-30
+ * @since 2020-04-10
  */
-public interface UserService extends IService<User> {
+public interface UserService extends BaseService<User> {
 
 }

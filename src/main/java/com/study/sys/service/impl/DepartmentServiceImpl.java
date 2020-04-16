@@ -3,7 +3,7 @@ package com.study.sys.service.impl;
 import com.study.sys.entity.Department;
 import com.study.sys.mapper.DepartmentMapper;
 import com.study.sys.service.DepartmentService;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.study.sys.utils.BaseServiceImpl;
 import org.springframework.stereotype.Service;
 
 /**
@@ -12,9 +12,9 @@ import org.springframework.stereotype.Service;
  * </p>
  *
  * @author wxl
- * @since 2020-03-30
+ * @since 2020-04-10
  */
 @Service
-public class DepartmentServiceImpl extends ServiceImpl<DepartmentMapper, Department> implements DepartmentService {
+public class DepartmentServiceImpl extends BaseServiceImpl<DepartmentMapper, Department> implements DepartmentService {
 
 }

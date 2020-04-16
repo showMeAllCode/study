@@ -14,11 +14,11 @@ import com.study.sys.service.CompanyService;
  * </p>
  *
  * @author wxl
- * @since 2020-03-30
+ * @since 2020-04-10
  */
 @Api(value = "CompanyController控制类", tags = "公司信息的控制类")
 @Controller
-@RequestMapping("/sys/company")
+@RequestMapping("company")
 public class CompanyController extends BaseController<Company, CompanyService> {
 
 }

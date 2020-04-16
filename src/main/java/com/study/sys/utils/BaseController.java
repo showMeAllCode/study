@@ -1,7 +1,5 @@
 package com.study.sys.utils;
 
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
-import com.baomidou.mybatisplus.extension.service.IService;
 import com.study.sys.dto.PageQueryDto;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -11,12 +9,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * @author wxl
  * @date 2020/3/30 14:30:15
  */
 @Slf4j
-public class BaseController <T, M extends IService> extends BaseControllerOperationUtil<T, M> {
+public class BaseController<T, M extends BaseService> extends BaseControllerOperationUtil<T, M> {
 
     @ApiOperation(value = "新增信息", notes = "id不用传")
     @PostMapping("/saveMsg")
@@ -24,10 +24,10 @@ public class BaseController <T, M extends IService> extends BaseControllerOperat
     public RestResult<T> saveMsg(@ApiParam(name = "dto", required = true) T entity) {
         RestResult<T> result = RestResult.success();
         try {
-            this.getEntityService().save(entity);
+            this.getEntityService().saveMsg(entity);
             result.setData(entity);
         } catch (Exception e) {
-            log.error("新增信息失败，失败原因：{}",e);
+            log.error("新增信息失败，失败原因：{}", e);
             result = RestResult.failure();
         }
 
@@ -40,11 +40,10 @@ public class BaseController <T, M extends IService> extends BaseControllerOperat
     public RestResult<T> updateMsg(@ApiParam(name = "dto", required = true) T entity) {
         RestResult<T> result = RestResult.success();
         try {
-            UpdateWrapper<T> wrapper = new UpdateWrapper<>();
-            this.getEntityService().updateById(entity);
+            this.getEntityService().updateMsg(entity);
             result.setData(entity);
         } catch (Exception e) {
-            log.error("修改整表信息失败，失败原因：{}",e);
+            log.error("修改整表信息失败，失败原因：{}", e);
             result = RestResult.failure();
         }
         return result;
@@ -56,9 +55,9 @@ public class BaseController <T, M extends IService> extends BaseControllerOperat
     public RestResult<T> deleteMsg(@ApiParam(name = "id", example = "1", required = true) Long id) {
         RestResult<T> result = RestResult.success();
         try {
-            this.getEntityService().removeById(id);
+            this.getEntityService().deleteMsg(id);
         } catch (Exception e) {
-            log.error("根据id删除信息，失败原因：{}",e);
+            log.error("根据id删除信息，失败原因：{}", e);
             result = RestResult.failure();
         }
         return result;
@@ -72,21 +71,21 @@ public class BaseController <T, M extends IService> extends BaseControllerOperat
         try {
             result.setData((T) this.getEntityService().getById(id));
         } catch (Exception e) {
-            log.error("根据id获取信息，失败原因：{}",e);
+            log.error("根据id获取信息，失败原因：{}", e);
             result = RestResult.failure();
         }
         return result;
     }
 
     @ApiOperation(value = "根据id列表获取信息", notes = "id使用','隔开")
-    @GetMapping   ("/queryByIds")
+    @GetMapping("/queryByIds")
     @ResponseBody
     public RestResult<T> queryByIds(@ApiParam(name = "ids", example = "1,2,3", required = true) @RequestParam("ids") String ids) {
         RestResult<T> result = RestResult.success();
         try {
             result.setPageInfos(this.doQueryByIds(ids));
         } catch (Exception e) {
-            log.error("根据id列表获取信息，失败原因：{}",e);
+            log.error("根据id列表获取信息，失败原因：{}", e);
             result = RestResult.failure();
         }
         return result;
@@ -100,7 +99,7 @@ public class BaseController <T, M extends IService> extends BaseControllerOperat
         try {
             result.setPageInfos(this.doPageQuery(dto));
         } catch (Exception e) {
-            log.error("分页获取信息，失败原因：{}",e);
+            log.error("分页获取信息，失败原因：{}", e);
             result = RestResult.failure();
         }
         return result;
@@ -110,12 +109,13 @@ public class BaseController <T, M extends IService> extends BaseControllerOperat
     @PostMapping("/queryMsgByParamsEq")
     @ResponseBody
     public RestResult<T> queryMsgByParamsEq(@ApiParam(name = "dto", required = true) T entity,
-                                        @ApiParam(name = "PageQueryDto", required = true) PageQueryDto dto) {
+                                            @ApiParam(name = "PageQueryDto", required = true) PageQueryDto dto,
+                                            HttpServletRequest request) {
         RestResult<T> result = RestResult.success();
         try {
-            result.setPageInfos(this.doQueryMsgByParams(entity, dto,true));
+            result.setPageInfos(this.doQueryMsgByParams(entity, dto, true, request));
         } catch (Exception e) {
-            log.error("分页获取信息，失败原因：{}",e);
+            log.error("分页获取信息，失败原因：{}", e);
             result = RestResult.failure();
         }
         return result;
@@ -125,12 +125,13 @@ public class BaseController <T, M extends IService> extends BaseControllerOperat
     @PostMapping("/queryMsgByParamsLike")
     @ResponseBody
     public RestResult<T> queryMsgByParamsLike(@ApiParam(name = "dto", required = true) T entity,
-                                        @ApiParam(name = "PageQueryDto", required = true) PageQueryDto dto) {
+                                              @ApiParam(name = "PageQueryDto", required = true) PageQueryDto dto,
+                                              HttpServletRequest request) {
         RestResult<T> result = RestResult.success();
         try {
-            result.setPageInfos(this.doQueryMsgByParams(entity, dto,false));
+            result.setPageInfos(this.doQueryMsgByParams(entity, dto, false, request));
         } catch (Exception e) {
-            log.error("分页获取信息，失败原因：{}",e);
+            log.error("分页获取信息，失败原因：{}", e);
             result = RestResult.failure();
         }
         return result;

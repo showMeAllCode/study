@@ -14,11 +14,11 @@ import com.study.sys.service.DepPermissionService;
  * </p>
  *
  * @author wxl
- * @since 2020-03-30
+ * @since 2020-04-10
  */
 @Api(value = "DepPermissionController控制类", tags = "部门权限的控制类")
 @Controller
-@RequestMapping("/sys/dep-permission")
+@RequestMapping("dep-permission")
 public class DepPermissionController extends BaseController<DepPermission, DepPermissionService> {
 
 }

@@ -16,7 +16,6 @@ public class MyInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o) throws Exception {
         String csrfToken = httpServletRequest.getParameter("csrfToken");
         Assert.notNull(csrfToken, "csrfToken为空，请求拦截");
-
         return false;
     }
 

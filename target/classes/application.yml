@@ -8,7 +8,7 @@ spring:
     #url: jdbc:mysql://127.0.0.1:3306/newoa?useUnicode=true&useSSL=false&characterEncoding=utf8&severTimezone=Asia/Shanghai
     username: root
     password: xy123456
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    driver-class-name: com.mysql.jdbc.Driver
 
 logging:
   config: classpath:logback-spring.xml
@@ -16,5 +16,4 @@ logging:
 #mybatis:
 #  mapper-locations: classpath:mybatis/*.xml
 
-upload-file-path: D:/webapps/file
 

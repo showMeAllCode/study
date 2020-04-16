@@ -14,11 +14,11 @@ import com.study.sys.service.CompanyPermissionService;
  * </p>
  *
  * @author wxl
- * @since 2020-03-30
+ * @since 2020-04-10
  */
 @Api(value = "CompanyPermissionController控制类", tags = "公司权限的控制类")
 @Controller
-@RequestMapping("/sys/company-permission")
+@RequestMapping("company-permission")
 public class CompanyPermissionController extends BaseController<CompanyPermission, CompanyPermissionService> {
 
 }

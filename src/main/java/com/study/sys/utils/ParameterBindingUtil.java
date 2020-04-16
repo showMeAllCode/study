@@ -10,6 +10,13 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class ParameterBindingUtil  {
 
+    /**
+     * 数据绑定
+     * @param request
+     * @param dto
+     * @param <T>
+     * @return
+     */
     public static  <T> T parameterBinding(HttpServletRequest request, T dto) {
         ServletRequestDataBinder binder = new ServletRequestDataBinder(dto, dto.getClass().getName());
         binder.bind(request);

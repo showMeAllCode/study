@@ -14,11 +14,11 @@ import com.study.sys.service.PermissionService;
  * </p>
  *
  * @author wxl
- * @since 2020-03-30
+ * @since 2020-04-10
  */
 @Api(value = "PermissionController控制类", tags = "功能权限的控制类")
 @Controller
-@RequestMapping("/sys/permission")
+@RequestMapping("permission")
 public class PermissionController extends BaseController<Permission, PermissionService> {
 
 }

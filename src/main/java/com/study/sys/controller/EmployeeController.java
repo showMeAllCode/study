@@ -14,11 +14,11 @@ import com.study.sys.service.EmployeeService;
  * </p>
  *
  * @author wxl
- * @since 2020-03-30
+ * @since 2020-04-10
  */
 @Api(value = "EmployeeController控制类", tags = "用户的员工信息的控制类")
 @Controller
-@RequestMapping("/sys/employee")
+@RequestMapping("employee")
 public class EmployeeController extends BaseController<Employee, EmployeeService> {
 
 }

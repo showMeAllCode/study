@@ -1,3 +1,4 @@
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.core.toolkit.StringPool;
 import com.baomidou.mybatisplus.generator.AutoGenerator;
 import com.baomidou.mybatisplus.generator.InjectionConfig;
@@ -49,13 +50,15 @@ public class generator {
              gc.setBaseResultMap(true);
              gc.setBaseColumnList(true);
              gc.setFileOverride(true);
+             gc.setIdType(IdType.UUID);
+
             mpg.setGlobalConfig(gc);
 
             // 数据源配置
             DataSourceConfig dsc = new DataSourceConfig();
             dsc.setUrl("jdbc:mysql://cdb-obab2ln3.gz.tencentcdb.com:10005/newOA?useUnicode=true&useSSL=false&characterEncoding=utf8&severTimezone=Asia/Shanghai");
             // dsc.setSchemaName("public");
-            dsc.setDriverName("com.mysql.cj.jdbc.Driver");
+            dsc.setDriverName("com.mysql.jdbc.Driver");
             dsc.setUsername("root");
             dsc.setPassword("xy123456");
             mpg.setDataSource(dsc);
@@ -124,6 +127,8 @@ public class generator {
             strategy.setSuperControllerClass("com.study.sys.utils.BaseController");
             strategy.setEntityLombokModel(true);
             strategy.setRestControllerStyle(true);
+            strategy.setSuperServiceClass("com.study.sys.utils.BaseService");
+            strategy.setSuperServiceImplClass("com.study.sys.utils.BaseServiceImpl");
             // 公共父类
 //            strategy.setSuperControllerClass("你自己的父类控制器,没有就不用设置!");
             // 写于父类中的公共字段

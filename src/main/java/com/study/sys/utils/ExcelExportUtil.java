@@ -1,5 +1,7 @@
 package com.study.sys.utils;
 
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.study.sys.utils.EntityFieldsAndCommentExportUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -26,7 +28,7 @@ import java.util.Map;
  * @date 2020/4/8 09:10:15
  */
 @Slf4j
-public class ExcelExport {
+public class ExcelExportUtil {
 
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 
@@ -104,17 +106,20 @@ public class ExcelExport {
             for (int i = 0; i < dataList.size(); i++) {
                 n = 0;
                 Integer m = 0;
-                XSSFRow newRow = sheet.createRow((short) i + 1);
+                XSSFRow newRow = sheet.createRow(i + 1);
                 Class<T> clazz = (Class<T>) dataList.get(i).getClass();
                 T entity = dataList.get(i);
                 Field[] fields = clazz.getDeclaredFields();
-                for (int j = 0; j < fields.length; j++) {
-                    fields[j].setAccessible(true);
-                    if (!"serialVersionUID".equals(fields[j].getName())) {
+                for (Field field : fields) {
+                    field.setAccessible(true);
+                    if(field.getAnnotation(TableField.class) != null && field.getAnnotation(TableField.class).exist() == false){
+                        continue;
+                    }
+                    if (!"serialVersionUID".equals(field.getName())) {
                         if (!ignoreNums.contains(m + ",")) {
                             String value = "";
-                            if (fields[j].get(entity) != null) {
-                                value = formattingValue(fields[j], entity, value, map);
+                            if (field.get(entity) != null) {
+                                value = formattingValue(field, entity, value, map);
                             }
                             newRow.createCell(n).setCellValue(value);
                             n++;
@@ -147,7 +152,7 @@ public class ExcelExport {
         }else if (field.getType().isEnum()){
             value = map.get(field.get(entity).toString());
         } else {
-            value = field.get(entity).toString();
+            value = String.valueOf(field.get(entity));
         }
         return value;
     }

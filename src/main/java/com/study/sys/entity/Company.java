@@ -2,7 +2,9 @@ package com.study.sys.entity;
 
 import java.math.BigDecimal;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.IdType;
 import java.time.LocalDateTime;
+import com.baomidou.mybatisplus.annotation.TableId;
 import java.io.Serializable;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -16,7 +18,7 @@ import lombok.experimental.Accessors;
  * </p>
  *
  * @author wxl
- * @since 2020-03-30
+ * @since 2020-04-10
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -28,6 +30,7 @@ public class Company implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @ApiModelProperty(value = "主键")
+    @TableId(value = "id", type = IdType.UUID)
     private Long id;
 
     @ApiModelProperty(value = "唯一编码")

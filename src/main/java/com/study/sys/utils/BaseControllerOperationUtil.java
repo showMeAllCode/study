@@ -1,5 +1,6 @@
 package com.study.sys.utils;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -7,10 +8,15 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.study.sys.dto.PageQueryDto;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * @author wxl
@@ -68,16 +74,29 @@ public class BaseControllerOperationUtil<T, M extends IService> {
         return iPage;
     }
 
-    public IPage doQueryMsgByParams(T entity, PageQueryDto dto, Boolean eq) throws IllegalAccessException {
+    public IPage doQueryMsgByParams(T entity, PageQueryDto dto, Boolean eq, HttpServletRequest request) throws IllegalAccessException {
         IPage<T> iPage = newIPage(dto);
         Field[] fields = entity.getClass().getDeclaredFields();
         QueryWrapper<T> wrapper = new QueryWrapper<>();
         for (Field field : fields) {
             field.setAccessible(true);
+            if(field.getAnnotation(TableField.class) != null && field.getAnnotation(TableField.class).exist() == false){
+                continue;
+            }
             if (!"serialVersionUID".equals(field.getName()) && field.get(entity) != null) {
+                if(field.getType() == LocalDateTime.class || field.getType() == LocalDate.class
+                        || field.getType() == Date.class){
+                    if (request.getParameter(field.getName() + "End") == null) {
+                        addWrapperConditions(wrapper, field.getName(), field.get(entity), eq);
+                    } else {
+                        wrapper.and((Consumer<QueryWrapper<T>>) wrapper.gt(camelToUnderline(field.getName()), field.get(entity)).lt(camelToUnderline(field.getName()), request.getParameter(field.getName() + "End")));
+                    }
+                    continue;
+                }
                 addWrapperConditions(wrapper, field.getName(), field.get(entity), eq);
             }
         }
+        wrapper.orderBy(true,false, "create_time");
         iPage = this.getEntityService().page(iPage, wrapper);
         return iPage;
     }

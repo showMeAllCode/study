@@ -1,7 +1,7 @@
 package com.study.sys.service;
 
 import com.study.sys.entity.Department;
-import com.baomidou.mybatisplus.extension.service.IService;
+import com.study.sys.utils.BaseService;
 
 /**
  * <p>
@@ -9,8 +9,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * </p>
  *
  * @author wxl
- * @since 2020-03-30
+ * @since 2020-04-10
  */
-public interface DepartmentService extends IService<Department> {
+public interface DepartmentService extends BaseService<Department> {
 
 }
