@@ -1,11 +1,13 @@
 package com.study.sys.utils;
 
+import com.alibaba.dubbo.common.utils.IOUtils;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.study.sys.dto.PageQueryDto;
+import com.study.sys.enums.AllowOperationsEnum;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.servlet.http.HttpServletRequest;
@@ -24,6 +26,10 @@ import java.util.function.Consumer;
  */
 @Slf4j
 public class BaseControllerOperationUtil<T, M extends IService> {
+
+    protected Boolean allowAll = true;
+
+    protected List<String> allowOperations = new ArrayList<>();
 
     private T entity;
 
@@ -124,4 +130,22 @@ public class BaseControllerOperationUtil<T, M extends IService> {
         }
         return sb.toString();
     }
+
+    /**
+     * 权限验证
+     * @param allowOperationsEnum
+     * @return
+     */
+    public Boolean isAllow(AllowOperationsEnum allowOperationsEnum){
+        if (allowAll){
+            return true;
+        }
+        for (String allowOperation : allowOperations) {
+            if (allowOperationsEnum.getValue().equals(allowOperation)){
+                return true;
+            }
+        }
+        throw new LogicException("无权访问");
+    }
+
 }

@@ -43,7 +43,7 @@ public class MvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry interceptorRegistry) {
-
+        interceptorRegistry.addInterceptor(new MyInterceptor()).addPathPatterns("/");
     }
 
     @Override

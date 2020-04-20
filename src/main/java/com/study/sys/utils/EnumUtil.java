@@ -6,7 +6,15 @@ package com.study.sys.utils;
  */
 public interface EnumUtil {
 
-    String code();
+    /**
+     * 获取枚举value
+     * @return
+     */
+    String getValue();
 
-    String msg();
+    /**
+     * 获取枚举desc
+     * @return
+     */
+    String getDesc();
 }
