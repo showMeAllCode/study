@@ -71,7 +71,9 @@ public class IOUtil {
         for(char[] buf = new char[8192]; (read = reader.read(buf)) != -1; total += (long)read) {
             writer.write(buf, 0, read);
         }
-
+        while ((read = reader.read()) != -1){
+            total += (long)read;
+        }
         return total;
     }
 

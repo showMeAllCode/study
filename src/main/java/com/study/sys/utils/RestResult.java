@@ -23,7 +23,6 @@ import java.io.Serializable;
 @Builder
 @Accessors(chain = true)
 @AllArgsConstructor
-@NoArgsConstructor
 public class RestResult<T> implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -54,6 +53,15 @@ public class RestResult<T> implements Serializable {
      * 响应时间戳
      */
     private long timestamp = System.currentTimeMillis();
+
+    public RestResult(){
+
+    }
+
+    public RestResult(Integer code, String message) {
+        this.code = code;
+        this.message = message;
+    }
 
     public static <T> RestResult<T> success() {
         return createResult(HttpStatus.HTTP_OK, true, "请求成功", null, null);

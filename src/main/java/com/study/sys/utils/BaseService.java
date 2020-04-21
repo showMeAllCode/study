@@ -26,6 +26,13 @@ public interface BaseService<T> extends IService<T> {
     boolean updateMsg(T entity);
 
     /**
+     * 根据id修改传入信息
+     * @param entity
+     * @return
+     */
+    boolean updateJson(T entity) throws IllegalAccessException;
+
+    /**
      * 根据id删除信息
      * @param id
      * @return
