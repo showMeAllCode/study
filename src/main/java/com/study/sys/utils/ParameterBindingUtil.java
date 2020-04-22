@@ -1,4 +1,4 @@
-package com.mapscience.utils;
+package com.study.sys.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.study.sys.utils.IOUtil;
