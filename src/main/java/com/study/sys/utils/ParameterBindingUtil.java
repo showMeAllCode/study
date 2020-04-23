@@ -1,7 +1,6 @@
 package com.study.sys.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.study.sys.utils.IOUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.ServletRequestDataBinder;
 
@@ -50,33 +49,42 @@ public class ParameterBindingUtil {
      * @return
      * @throws IOException
      */
-    public static <T> T requestBodyBinding(HttpServletRequest request, T dto) throws IOException {
-        if (request.getHeader(CONTENT_TYPE) != null && request.getHeader(CONTENT_TYPE).contains(JSON_TYPE)) {
-            String body = getBodyJson(request);
-            ObjectMapper mapper = new ObjectMapper();
-            Map map = mapper.readValue(body, Map.class);
-            map.forEach((k,v) -> {
-                try {
-                    Field field = dto.getClass().getDeclaredField(String.valueOf(k));
-                    field.setAccessible(true);
-                    field.set(dto,v);
-                } catch (NoSuchFieldException | IllegalAccessException e) {
-                    log.info(Thread.currentThread().getStackTrace()[2].getMethodName() + "无法绑定的参数：" + k);
-                }
-            });
+    public static <T> T requestBodyBinding(HttpServletRequest request, T dto) {
+        try {
+            if (request.getHeader(CONTENT_TYPE) != null && request.getHeader(CONTENT_TYPE).contains(JSON_TYPE)) {
+                String body = getBodyJson(request);
+                ObjectMapper mapper = new ObjectMapper();
+                Map map = mapper.readValue(body, Map.class);
+                map.forEach((k, v) -> {
+                    try {
+                        Field field = dto.getClass().getDeclaredField(String.valueOf(k));
+                        field.setAccessible(true);
+                        Object value = null;
+                        value = FieldValueFormattingUtil.dataFormattingValue(field, dto, value, map);
+                        field.set(dto, value);
+                    } catch (NoSuchFieldException | IllegalAccessException e) {
+                        log.info(Thread.currentThread().getStackTrace()[2].getMethodName() + "无法绑定的参数：" + k);
+                    }
+                });
+            }
+        } catch (Exception e) {
+            log.error("requestBodyBinding参数绑定失败，原因：{}", e);
+            throw new LogicException("参数绑定失败");
         }
+
         return dto;
     }
 
     /**
      * body单参数处理
+     *
      * @param name
      * @param request
      * @return
      * @throws IOException
      * @throws NoSuchMethodException
      */
-    public static Object requestBodyBinding(String name, HttpServletRequest request) throws IOException, NoSuchMethodException {
+    public static Object requestBodyBinding(String name, HttpServletRequest request) throws IOException {
         if (request.getHeader(CONTENT_TYPE) != null && request.getHeader(CONTENT_TYPE).contains(JSON_TYPE)) {
             String body = getBodyJson(request);
             ObjectMapper mapper = new ObjectMapper();

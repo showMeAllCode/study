@@ -1,7 +1,6 @@
 package com.study.sys.utils;
 
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.study.sys.utils.EntityFieldsAndCommentExportUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -21,7 +20,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author wxl
@@ -36,9 +34,10 @@ public class ExcelExportUtil {
 
     /**
      * 普通Excel导出
+     *
      * @param sheetName 表名
-     * @param headers 表头
-     * @param dataList 数据，null值请转换为"";
+     * @param headers   表头
+     * @param dataList  数据，null值请转换为"";
      */
     public void commonExcelExport(String sheetName, String[] headers, List<List<String>> dataList, HttpServletResponse response) throws IllegalAccessException, InstantiationException, IOException {
         try {
@@ -59,14 +58,14 @@ public class ExcelExportUtil {
                 }
             }
             setResponse(sheetName, response);
-            OutputStream outputStream =  new BufferedOutputStream(response.getOutputStream());
+            OutputStream outputStream = new BufferedOutputStream(response.getOutputStream());
             try {
                 wb.write(outputStream);
                 outputStream.flush();
-            }finally {
+            } finally {
                 outputStream.close();
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             log.error("excel导出失败，失败原因：{}", e);
             throw new RuntimeException("excel导出失败");
         }
@@ -75,20 +74,20 @@ public class ExcelExportUtil {
     /**
      * 实体类的Excel导出
      * 本方法将读取数据库中对应表的字段注释信息作为表头
+     *
      * @param sheetName xls表名
      * @param tableName 数据库表名
      * @param tableName 需要忽略的字段，以","分隔，例："0,3,4"
-     * @param dataList 数据
-     * @param map 需要处理的枚举，key为枚举，value为信息，例：现在有枚举：YES("yes","正确");则map.put("YES","正确")
+     * @param dataList  数据
      * @param response
      */
     public <T> void entityExcelExport(String sheetName, String tableName, String ignoreNums, List<T> dataList,
-                                      Map<String,String> map, HttpServletResponse response) {
+                                      HttpServletResponse response) {
         try {
-            Assert.notNull(sheetName,"sheetName不能为空");
-            Assert.notNull(tableName,"tableName不能为空");
-            Assert.notNull(ignoreNums,"ignoreNums不能为空");
-            Assert.notEmpty(dataList,"dataList不能为空");
+            Assert.notNull(sheetName, "sheetName不能为空");
+            Assert.notNull(tableName, "tableName不能为空");
+            Assert.notNull(ignoreNums, "ignoreNums不能为空");
+            Assert.notEmpty(dataList, "dataList不能为空");
             ignoreNums = ignoreNums + ",";
             List<Object> entityFieldsList = new ArrayList<>();
             List<Object> entityCommentList = new ArrayList<>();
@@ -112,14 +111,14 @@ public class ExcelExportUtil {
                 Field[] fields = clazz.getDeclaredFields();
                 for (Field field : fields) {
                     field.setAccessible(true);
-                    if(field.getAnnotation(TableField.class) != null && field.getAnnotation(TableField.class).exist() == false){
+                    if (field.getAnnotation(TableField.class) != null && field.getAnnotation(TableField.class).exist() == false) {
                         continue;
                     }
                     if (!"serialVersionUID".equals(field.getName())) {
                         if (!ignoreNums.contains(m + ",")) {
                             String value = "";
                             if (field.get(entity) != null) {
-                                value = formattingValue(field, entity, value, map);
+                                value = formattingValue(field, entity, value);
                             }
                             newRow.createCell(n).setCellValue(value);
                             n++;
@@ -142,15 +141,16 @@ public class ExcelExportUtil {
         }
     }
 
-    private  <T> String formattingValue(Field field, T entity, String value, Map<String,String> map) throws IllegalAccessException {
-        if(field.getType() == LocalDateTime.class){
-            value = dateTimeFormatter.format((LocalDateTime)field.get(entity));
-        }else if (field.getType() == LocalDate.class){
-            value = dateTimeFormatter.format((LocalDate)field.get(entity));
-        }else if (field.getType() == Date.class){
-            value = dateFormat.format((Date)field.get(entity));
-        }else if (field.getType().isEnum()){
-            value = map.get(field.get(entity).toString());
+    private <T> String formattingValue(Field field, T entity, String value) throws IllegalAccessException {
+        Class<?> clazz = field.getType();
+        if (field.getType() == LocalDateTime.class) {
+            value = dateTimeFormatter.format((LocalDateTime) field.get(entity));
+        } else if (field.getType() == LocalDate.class) {
+            value = dateTimeFormatter.format((LocalDate) field.get(entity));
+        } else if (field.getType() == Date.class) {
+            value = dateFormat.format((Date) field.get(entity));
+        } else if (field.getType().isEnum()) {
+            value = String.valueOf(EnumHelperUtil.customEnumUtil(field.getType()).enumValueGetDesc(field.get(entity)));
         } else {
             value = String.valueOf(field.get(entity));
         }
@@ -159,6 +159,7 @@ public class ExcelExportUtil {
 
     /**
      * 设置xls返回头
+     *
      * @param sheetName
      * @param response
      * @throws UnsupportedEncodingException
