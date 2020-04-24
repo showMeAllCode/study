@@ -33,8 +33,7 @@ public class FieldValueFormattingUtil {
             } else if (clazz == Date.class) {
                 value = dateFormat.parse(String.valueOf(map.get(field.getName())));
             } else if (clazz.isEnum()) {
-                EnumBindingUtil bindingUtil = new EnumBindingUtil(clazz);
-                value = bindingUtil.enumBinding(map.get(field.getName()));
+                value = EnumHelperUtil.customEnumUtil(clazz).getEnum(map.get(field.getName()));
             } else {
                 value = String.valueOf(map.get(field.getName()));
             }

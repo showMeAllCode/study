@@ -14,6 +14,14 @@ import java.util.List;
  */
 @Slf4j
 public class EntityFieldsAndCommentExportUtil {
+    /**
+     * 获取数据库表中的字段及其注释
+     * @param entityFieldsList
+     * @param entityCommentList
+     * @param tableName
+     * @throws SQLException
+     * @throws ClassNotFoundException
+     */
     public static void get(List<Object> entityFieldsList, List<Object> entityCommentList, String tableName) throws SQLException, ClassNotFoundException {
         Connection connect = DatabaseConnectUtil.getConnection();
         try {

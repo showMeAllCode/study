@@ -143,16 +143,18 @@ public class ExcelExportUtil {
 
     private <T> String formattingValue(Field field, T entity, String value) throws IllegalAccessException {
         Class<?> clazz = field.getType();
-        if (field.getType() == LocalDateTime.class) {
-            value = dateTimeFormatter.format((LocalDateTime) field.get(entity));
-        } else if (field.getType() == LocalDate.class) {
-            value = dateTimeFormatter.format((LocalDate) field.get(entity));
-        } else if (field.getType() == Date.class) {
-            value = dateFormat.format((Date) field.get(entity));
-        } else if (field.getType().isEnum()) {
-            value = String.valueOf(EnumHelperUtil.customEnumUtil(field.getType()).enumValueGetDesc(field.get(entity)));
-        } else {
-            value = String.valueOf(field.get(entity));
+        if(field.get(entity) != null) {
+            if (clazz == LocalDateTime.class) {
+                value = dateTimeFormatter.format((LocalDateTime) field.get(entity));
+            } else if (clazz == LocalDate.class) {
+                value = dateTimeFormatter.format((LocalDate) field.get(entity));
+            } else if (clazz == Date.class) {
+                value = dateFormat.format((Date) field.get(entity));
+            } else if (clazz.isEnum()) {
+                value = String.valueOf(EnumHelperUtil.customEnumUtil(clazz).getDesc(field.get(entity)));
+            } else {
+                value = String.valueOf(field.get(entity));
+            }
         }
         return value;
     }
