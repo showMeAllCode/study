@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.annotation.IdType;
 import java.time.LocalDateTime;
 import com.baomidou.mybatisplus.annotation.TableId;
 import java.io.Serializable;
+
+import com.study.sys.enums.CompanyStatusEnum;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -67,7 +69,7 @@ public class Company implements Serializable {
     private String companyCard;
 
     @ApiModelProperty(value = "状态")
-    private Integer status;
+    private CompanyStatusEnum status;
 
     @ApiModelProperty(value = "描述")
     private String remark;

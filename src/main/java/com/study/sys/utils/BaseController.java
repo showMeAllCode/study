@@ -76,7 +76,7 @@ public class BaseController<T, M extends BaseService> extends BaseControllerOper
         RestResult result = new RestResult();
         try {
             isAllow(AllowOperationsEnum.DELETE_MSG);
-            ParameterBindingUtil.requestBodyBinding(request);
+            id = (String) ParameterBindingUtil.requestBodyBinding("id", request);
             this.getEntityService().deleteMsg(id);
         } catch (Exception e) {
             log.error("根据id删除信息，失败原因：{}", e);

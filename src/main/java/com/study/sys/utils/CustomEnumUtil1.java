@@ -2,23 +2,16 @@ package com.study.sys.utils;
 
 /**
  * @author wxl
- * @date 2020/4/23 15:59:02
+ * @date 2020/4/24 11:33:22
  */
-public class CustomEnumUtil<E extends Enum<?> & EnumUtil> {
-
-    private Class<E> clazz;
-
-    CustomEnumUtil(Class<E> clazz) {
-        this.clazz = clazz;
-    }
-
+public class CustomEnumUtil1 {
     /**
      * 枚举转换，通过desc值返回枚举
      *
      * @param desc
      * @return
      */
-    public E descOf(Object desc) {
+    public static <E extends Enum<?> & EnumUtil> E descOf(Class<E> clazz, Object desc) {
         E[] es = clazz.getEnumConstants();
         for (int i = 0; i < es.length; ++i) {
             E e = es[i];
@@ -44,7 +37,7 @@ public class CustomEnumUtil<E extends Enum<?> & EnumUtil> {
      * @param value
      * @return
      */
-    public E nameOf(Object value) {
+    public static <E extends Enum<?> & EnumUtil> E nameOf(Class<E> clazz, Object value) {
         E[] es = clazz.getEnumConstants();
         for (int i = 0; i < es.length; ++i) {
             if (es[i].name().equals(value)) {
@@ -60,7 +53,7 @@ public class CustomEnumUtil<E extends Enum<?> & EnumUtil> {
      * @param value
      * @return
      */
-    public E valueOf(Object value) {
+    public static <E extends Enum<?> & EnumUtil> E valueOf(Class<E> clazz, Object value) {
         E[] es = clazz.getEnumConstants();
         for (int i = 0; i < es.length; ++i) {
             E e = es[i];
@@ -86,12 +79,12 @@ public class CustomEnumUtil<E extends Enum<?> & EnumUtil> {
      * @param obj
      * @return
      */
-    public E getEnum(Object obj) {
-        E result = nameOf(obj);
+    public static <E extends Enum<?> & EnumUtil> E getEnum(Class<E> clazz, Object obj) {
+        E result = nameOf(clazz, obj);
         if (result == null) {
-            result = valueOf(obj);
+            result = valueOf(clazz, obj);
             if (result == null) {
-                result = descOf(obj);
+                result = descOf(clazz, obj);
             }
         }
         return result;
@@ -103,10 +96,10 @@ public class CustomEnumUtil<E extends Enum<?> & EnumUtil> {
      * @param value
      * @return
      */
-    public Object getValue(Object value) {
-        E result = nameOf(value);
+    public static <E extends Enum<?> & EnumUtil> Object getValue(Class<E> clazz, Object value) {
+        E result = nameOf(clazz, value);
         if (result == null) {
-            result = descOf(value);
+            result = descOf(clazz, value);
         }
         return result.getValue();
     }
@@ -117,10 +110,10 @@ public class CustomEnumUtil<E extends Enum<?> & EnumUtil> {
      * @param value
      * @return
      */
-    public Object getDesc(Object value) {
-        E result = nameOf(value);
+    public static <E extends Enum<?> & EnumUtil> Object getDesc(Class<E> clazz, Object value) {
+        E result = nameOf(clazz, value);
         if (result == null) {
-            result = valueOf(value);
+            result = valueOf(clazz, value);
         }
         return result.getDesc();
     }

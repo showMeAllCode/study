@@ -11,6 +11,6 @@ public class EnumHelperUtil {
     }
 
     public static CustomEnumUtil customEnumUtil(Class<?> obj){
-        return new CustomEnumUtil(obj.getClass());
+        return new CustomEnumUtil(obj);
     }
 }
