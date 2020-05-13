@@ -13,10 +13,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -27,10 +25,6 @@ import java.util.List;
  */
 @Slf4j
 public class ExcelExportUtil {
-
-    private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-
-    private DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
 
     /**
      * 普通Excel导出
@@ -143,13 +137,13 @@ public class ExcelExportUtil {
 
     private <T> String formattingValue(Field field, T entity, String value) throws IllegalAccessException {
         Class<?> clazz = field.getType();
-        if(field.get(entity) != null) {
+        if (field.get(entity) != null) {
             if (clazz == LocalDateTime.class) {
-                value = dateTimeFormatter.format((LocalDateTime) field.get(entity));
+                value = FieldValueFormattingUtil.dateTimeFormatter.format((LocalDateTime) field.get(entity));
             } else if (clazz == LocalDate.class) {
-                value = dateTimeFormatter.format((LocalDate) field.get(entity));
+                value = FieldValueFormattingUtil.dateFormatter.format((LocalDate) field.get(entity));
             } else if (clazz == Date.class) {
-                value = dateFormat.format((Date) field.get(entity));
+                value = FieldValueFormattingUtil.dateFormat.format((Date) field.get(entity));
             } else if (clazz.isEnum()) {
                 value = String.valueOf(EnumHelperUtil.customEnumUtil(clazz).getDesc(field.get(entity)));
             } else {

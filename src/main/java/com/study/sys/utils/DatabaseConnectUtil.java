@@ -21,43 +21,20 @@ public class DatabaseConnectUtil {
 
     private static String password;
 
-    private static String driver = "com.mysql.jdbc.Driver";
-
-    public String getUrl() {
-        return url;
-    }
-
     public void setUrl(String url) {
         DatabaseConnectUtil.url = url;
-    }
-
-    public String getUsername() {
-        return username;
     }
 
     public void setUsername(String username) {
         DatabaseConnectUtil.username = username;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
     public void setPassword(String password) {
         DatabaseConnectUtil.password = password;
     }
 
-    public String getDriver() {
-        return driver;
-    }
-
-    public void setDriver(String driver) {
-        DatabaseConnectUtil.driver = driver;
-    }
-
-    public static Connection getConnection() throws ClassNotFoundException, SQLException {
-        Class.forName(driver);
-        Connection connection = (Connection) DriverManager.getConnection(url, username, password);
+    public static Connection getConnection() throws SQLException {
+        Connection connection = DriverManager.getConnection(url, username, password);
         return connection;
     }
 }

@@ -1,11 +1,9 @@
-package com.mapscience.utils;
+package com.study.sys.utils;
 
-import com.study.sys.utils.EnumHelperUtil;
-import com.study.sys.utils.LogicException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.validation.DataBinder;
 
 import java.lang.reflect.Field;
-import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -20,30 +18,47 @@ import java.util.Map;
 @Slf4j
 public class FieldValueFormattingUtil {
 
-    private static SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    public static DataBinder dataBinder = new DataBinder(null);
 
-    private static DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    public static final String YYYY_MM_DD_HH_MM_SS = "yyyy-MM-dd HH:mm:ss";
 
-    private static DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    public static final String YYYY_MM_DD = "yyyy-MM-dd";
 
-    public static <T> Object dataFormattingValue(Field field, T entity, Object value, Map map) {
+    public static SimpleDateFormat dateFormat = new SimpleDateFormat(YYYY_MM_DD_HH_MM_SS);
+
+    public static DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(YYYY_MM_DD_HH_MM_SS);
+
+    public static DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(YYYY_MM_DD);
+
+
+    /**
+     * 数据转换
+     * @param field
+     * @param map
+     * @return
+     */
+    public static Object dataFormattingValue(Field field, Map map) {
+        Object value;
         try {
             Class<?> clazz = field.getType();
-            value = map.get(field.getName());
             if (clazz == LocalDateTime.class) {
                 String dateTime = String.valueOf(map.get(field.getName()));
-                if(dateTime.length() == 10) {
+                if(dateTime.length() == YYYY_MM_DD.length()) {
                     dateTime = dateTime + " 00:00:00";
                 }
                 value = LocalDateTime.parse(dateTime, dateTimeFormatter);
             } else if (clazz == LocalDate.class) {
                 value = LocalDate.parse(String.valueOf(map.get(field.getName())), dateFormatter);
             } else if (clazz == Date.class) {
-                value = dateFormat.parse(String.valueOf(map.get(field.getName())));
+                String dateTime = String.valueOf(map.get(field.getName()));
+                if(dateTime.length() == YYYY_MM_DD.length()) {
+                    dateTime = dateTime + " 00:00:00";
+                }
+                value = dateFormat.parse(dateTime);
             } else if (clazz.isEnum()) {
-                value = EnumHelperUtil.customEnumUtil(clazz).getEnum(map.get(field.getName()));
-            } else if(clazz == BigDecimal.class){
-                value = BigDecimal.valueOf(Double.parseDouble(map.get(field.getName()).toString()));
+                value = EnumHelperUtil.IEnumUtil(clazz).getEnum(map.get(field.getName()));
+            } else {
+                value = dataBinder.convertIfNecessary(map.get(field.getName()), clazz);
             }
         } catch (Exception e) {
             log.error("数据转换绑定失败，原因：{}", e);
