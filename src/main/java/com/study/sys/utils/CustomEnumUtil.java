@@ -76,7 +76,6 @@ public class CustomEnumUtil<E extends Enum<?> & EnumUtil> {
                 return e;
             }
         }
-
         return null;
     }
 
@@ -94,11 +93,14 @@ public class CustomEnumUtil<E extends Enum<?> & EnumUtil> {
                 result = descOf(obj);
             }
         }
+        if(result == null){
+            throw new LogicException("不存在的枚举");
+        }
         return result;
     }
 
     /**
-     * 枚举转换，通过枚举名或value返回desc值
+     * 枚举转换，通过枚举名或desc返回value值
      *
      * @param value
      * @return
@@ -108,11 +110,14 @@ public class CustomEnumUtil<E extends Enum<?> & EnumUtil> {
         if (result == null) {
             result = descOf(value);
         }
+        if(result == null){
+            throw new LogicException("不存在的枚举");
+        }
         return result.getValue();
     }
 
     /**
-     * 枚举转换，通过枚举名或desc返回value值
+     * 枚举转换，通过枚举名或value返回desc值
      *
      * @param value
      * @return
@@ -121,6 +126,9 @@ public class CustomEnumUtil<E extends Enum<?> & EnumUtil> {
         E result = nameOf(value);
         if (result == null) {
             result = valueOf(value);
+        }
+        if(result == null){
+            throw new LogicException("不存在的枚举");
         }
         return result.getDesc();
     }

@@ -11,7 +11,7 @@ import java.util.Map;
  */
 public class EnumHelperUtil {
 
-    private static Map<String, CustomEnumUtil> customEnumUtilMapCache = new HashMap();
+    public static Map<String, CustomEnumUtil> customEnumUtilMapCache = new HashMap();
 
     private static Map<String, MybatisPlusIEnumUtil> mybatisPlusIEnumUtilMapCache = new HashMap();
 
@@ -28,7 +28,7 @@ public class EnumHelperUtil {
     private static CustomEnumUtil getCustomEnumUtil(Class<?> obj) {
         CustomEnumUtil customEnumUtil = customEnumUtilMapCache.get(obj.getName());
         if (customEnumUtil == null) {
-            customEnumUtil = new CustomEnumUtil(obj.getClass());
+            customEnumUtil = new CustomEnumUtil(obj);
             customEnumUtilMapCache.put(obj.getName(), customEnumUtil);
         }
         return customEnumUtil;
@@ -47,7 +47,7 @@ public class EnumHelperUtil {
     private static MybatisPlusIEnumUtil getMybatisPlusIEnumUtil(Class<?> obj) {
         MybatisPlusIEnumUtil mybatisPlusIEnumUtil = mybatisPlusIEnumUtilMapCache.get(obj.getName());
         if (mybatisPlusIEnumUtil == null) {
-            mybatisPlusIEnumUtil = new MybatisPlusIEnumUtil(obj.getClass());
+            mybatisPlusIEnumUtil = new MybatisPlusIEnumUtil(obj);
             mybatisPlusIEnumUtilMapCache.put(obj.getName(), mybatisPlusIEnumUtil);
         }
         return mybatisPlusIEnumUtil;
